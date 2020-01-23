@@ -17,22 +17,22 @@
           background-color="#333744"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <!--          一级菜单-->
-          <el-submenu index="1">
+          <!--          一级菜单 (添加:代表标签的动态属性)-->
+          <el-submenu :index="item.id+''" v-for="item in menulist" :key="item.id">
             <!--            一级菜单模板区域-->
             <template slot="title">
               <!--              图标-->
               <i class="el-icon-location"></i>
               <!--              文本-->
-              <span>导航一</span>
+              <span>{{item.authName}}</span>
             </template>
             <!--            二级菜单-->
-            <el-menu-item index="1-1">
+            <el-menu-item :index="submenu.id+''" v-for="submenu in item.children" :key="submenu.id">
               <template slot="title">
                 <!--              图标-->
                 <i class="el-icon-location"></i>
                 <!--              文本-->
-                <span>导航一</span>
+                <span>{{submenu.authName}}</span>
               </template>
             </el-menu-item>
           </el-submenu>
@@ -47,10 +47,35 @@
 
 <script>
   export default {
+    data() {
+      return {
+        // 左侧菜单数据
+        menulist: []
+      }
+    },
+    created() {
+      this.getMenuList()
+    },
     methods: {
       logout() {
         window.sessionStorage.clear()
         this.$router.push('/login')
+      },
+      /**
+       * 获取所有的菜单
+       */
+      async getMenuList() {
+        // 解构出promise对象中的data
+        // ![](http://image-picgo.test.upcdn.net/img/20200123122711.png)
+        const { data: res } = await this.$http.get('menus')
+        // 接口返回不正常，则用消息组件显示后台返回数据的错误提示
+        console.log(res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg)
+        } else {
+          this.$message.success(res.meta.msg)
+          this.menulist = res.data
+        }
       }
     }
   }
