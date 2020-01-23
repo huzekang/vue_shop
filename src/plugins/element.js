@@ -5,4 +5,5 @@ Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+// 挂载element Message组件到Vue中
 Vue.prototype.$message = Message

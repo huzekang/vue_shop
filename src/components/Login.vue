@@ -53,6 +53,7 @@ export default {
     // 点击重置按钮，重置登录表单
     resetLoginForm() {
       // console.log(this);
+      this.$message.success('hhhh')
       this.$refs.loginFormRef.resetFields()
     },
     login() {
