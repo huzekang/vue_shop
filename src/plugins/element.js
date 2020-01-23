@@ -1,6 +1,28 @@
 import Vue from 'vue'
-import { Button, Form, FormItem, Input, Message } from 'element-ui'
+import {
+  Menu,
+  MenuItem,
+  MenuItemGroup,
+  Submenu,
+  Button,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Form,
+  FormItem,
+  Input,
+  Message
+} from 'element-ui'
 
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
+Vue.use(Submenu)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Aside)
+Vue.use(Main)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
