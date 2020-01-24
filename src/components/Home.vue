@@ -16,13 +16,13 @@
         <el-menu
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b">
+          active-text-color="#409EFF" :unique-opened="true">
           <!--          一级菜单 (添加:代表标签的动态属性)-->
           <el-submenu :index="item.id+''" v-for="item in menulist" :key="item.id">
             <!--            一级菜单模板区域-->
             <template slot="title">
               <!--              图标-->
-              <i class="el-icon-location"></i>
+              <i :class="iconsObj[item.id]"></i>
               <!--              文本-->
               <span>{{item.authName}}</span>
             </template>
@@ -30,7 +30,7 @@
             <el-menu-item :index="submenu.id+''" v-for="submenu in item.children" :key="submenu.id">
               <template slot="title">
                 <!--              图标-->
-                <i class="el-icon-location"></i>
+                <i class="el-icon-menu"></i>
                 <!--              文本-->
                 <span>{{submenu.authName}}</span>
               </template>
@@ -50,7 +50,14 @@
     data() {
       return {
         // 左侧菜单数据
-        menulist: []
+        menulist: [],
+        iconsObj: {
+          '125': 'iconfont icon-user',
+          '103': 'iconfont icon-tijikongjian',
+          '101': 'iconfont icon-shangpin',
+          '102': 'iconfont icon-danju',
+          '145': 'iconfont icon-baobiao'
+        }
       }
     },
     created() {
@@ -108,9 +115,16 @@
 
   .el-aside {
     background-color: #333744;
+    .el-menu{
+      border-right: none;
+    }
   }
 
   .el-main {
     background-color: #eaedf1;
+  }
+
+  .iconfont {
+    margin-right: 10px;
   }
 </style>
