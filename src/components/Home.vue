@@ -11,12 +11,15 @@
     <!--      页面主体区域-->
     <el-container>
       <!--        侧边-->
-      <el-aside width="200px">
+      <el-aside :width="isCollapsed ? '64px':'200px'">
+        <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!--        侧边菜单-->
         <el-menu
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#409EFF" :unique-opened="true">
+          active-text-color="#409EFF" :unique-opened="true"
+          :collapse="isCollapsed" :collapse-transition="false"
+        >
           <!--          一级菜单 (添加:代表标签的动态属性)-->
           <el-submenu :index="item.id+''" v-for="item in menulist" :key="item.id">
             <!--            一级菜单模板区域-->
@@ -51,13 +54,16 @@
       return {
         // 左侧菜单数据
         menulist: [],
+        // 菜单图标
         iconsObj: {
           '125': 'iconfont icon-user',
           '103': 'iconfont icon-tijikongjian',
           '101': 'iconfont icon-shangpin',
           '102': 'iconfont icon-danju',
           '145': 'iconfont icon-baobiao'
-        }
+        },
+        // 是否折叠菜单
+        isCollapsed: false
       }
     },
     created() {
@@ -83,6 +89,13 @@
           this.$message.success(res.meta.msg)
           this.menulist = res.data
         }
+      },
+
+      /**
+       * 点击按钮，切换菜单的折叠与展开
+       */
+      toggleCollapse() {
+        this.isCollapsed = !this.isCollapsed
       }
     }
   }
@@ -115,7 +128,8 @@
 
   .el-aside {
     background-color: #333744;
-    .el-menu{
+
+    .el-menu {
       border-right: none;
     }
   }
@@ -126,5 +140,15 @@
 
   .iconfont {
     margin-right: 10px;
+  }
+
+  .toggle-button {
+    background-color: #4a5064;
+    font-size: 10px;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.4em;
+    cursor: pointer;
   }
 </style>
