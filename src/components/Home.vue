@@ -19,6 +19,7 @@
           text-color="#fff"
           active-text-color="#409EFF" :unique-opened="true"
           :collapse="isCollapsed" :collapse-transition="false"
+          router
         >
           <!--          一级菜单 (添加:代表标签的动态属性)-->
           <el-submenu :index="item.id+''" v-for="item in menulist" :key="item.id">
@@ -30,7 +31,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!--            二级菜单-->
-            <el-menu-item :index="submenu.id+''" v-for="submenu in item.children" :key="submenu.id">
+            <el-menu-item :index="'/'+submenu.path" v-for="submenu in item.children" :key="submenu.id">
               <template slot="title">
                 <!--              图标-->
                 <i class="el-icon-menu"></i>
