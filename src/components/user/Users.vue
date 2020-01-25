@@ -20,12 +20,73 @@
           <el-button type="primary">添加用户</el-button>
         </el-col>
       </el-row>
+
+      <!--      用户列表-->
+      <el-table
+        :data="userlist" border stripe>
+        <el-table-column
+          prop="username"
+          label="姓名">
+        </el-table-column>
+        <el-table-column
+          prop="email"
+          label="邮箱">
+        </el-table-column>
+        <el-table-column
+          prop="mobile"
+          label="电话">
+        </el-table-column>
+        <el-table-column
+          prop="role_name"
+          label="角色">
+        </el-table-column>
+        <el-table-column
+          prop="mg_state"
+          label="状态">
+        </el-table-column>
+        <el-table-column
+          label="操作">
+        </el-table-column>
+      </el-table>
     </el-card>
+
   </div>
 </template>
 
 <script>
-
+  export default {
+    data() {
+      return {
+        // 获取用户列表的请求参数对象
+        queryInfo: {
+          query: '',
+          pagenum: 1,
+          pagesize: 2
+        },
+        userlist: [],
+        totoal: 0
+      }
+    },
+    created() {
+      this.getUserList(this.queryInfo)
+    },
+    methods: {
+      /**
+       * 请求后台获取用户列表
+       */
+      async getUserList() {
+        const { data: res } = await this.$http.get('users', {
+          params: this.queryInfo
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取用户列表失败')
+        }
+        this.userlist = res.data.users
+        this.totoal = res.data.total
+        console.log(res)
+      }
+    }
+  }
 </script>
 
 <style lang="less" scoped>
