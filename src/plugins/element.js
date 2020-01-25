@@ -1,3 +1,6 @@
+/**
+ * 按需引入element组件
+ */
 import Vue from 'vue'
 import {
   Menu,
@@ -12,9 +15,20 @@ import {
   Form,
   FormItem,
   Input,
-  Message
+  Message,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col
+
 } from 'element-ui'
 
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Card)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
