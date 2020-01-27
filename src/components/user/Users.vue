@@ -33,7 +33,7 @@
           <el-form-item label="用户名" prop="username">
             <el-input v-model="addForm.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password" >
+          <el-form-item label="密码" prop="password">
             <el-input v-model="addForm.password" type="password"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
@@ -113,6 +113,29 @@
 <script>
   export default {
     data() {
+      // 验证邮箱的规则，使用箭头函数
+      let checkEmail = (rule, value, callback) => {
+        // 验证邮箱的正则表达式
+        const regEmail = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+        if (regEmail.test(value)) {
+          // 合法邮箱
+          return callback()
+        } else {
+          callback(new Error('请输入合法的邮箱'))
+        }
+      }
+      // 验证手机的规则，使用箭头函数
+      let checkPhone = (rule, value, callback) => {
+        // 验证邮箱的正则表达式
+        const regPhone = /^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+
+        if (regPhone.test(value)) {
+          // 合法手机
+          return callback()
+        } else {
+          callback(new Error('请输入合法的手机'))
+        }
+      }
       return {
         // 获取用户列表的请求参数对象
         queryInfo: {
@@ -147,11 +170,13 @@
           ],
           // 校验邮箱
           email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' }
+            { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { validator: checkEmail, trigger: 'blur' }
           ],
           // 校验手机
           phone: [
-            { required: true, message: '请输入手机', trigger: 'blur' }
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { validator: checkPhone, trigger: 'blur' }
           ]
         }
 
