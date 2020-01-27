@@ -13,13 +13,28 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-input placeholder="请输入内容" v-model="queryInfo.query" @clear="getUserList" clearable>
-            <el-button slot="append" @click="getUserList"  icon="el-icon-search"></el-button>
+            <el-button slot="append" @click="getUserList" icon="el-icon-search"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="dialogVisible =true">添加用户</el-button>
         </el-col>
       </el-row>
+
+      <!--      添加用户弹窗-->
+      <el-dialog
+        title="添加用户"
+        :visible.sync="dialogVisible"
+        width="30%"
+      >
+        <!--        主体区域-->
+        <span>这是一段信息</span>
+        <!--        底部操作区域-->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+         </span>
+      </el-dialog>
 
       <!--      用户列表-->
       <el-table
@@ -94,7 +109,9 @@
           pagesize: 2
         },
         userlist: [],
-        totoal: 0
+        totoal: 0,
+        // 控制添加用户弹窗显示的布尔值
+        dialogVisible: false
       }
     },
     created() {

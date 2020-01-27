@@ -25,10 +25,12 @@ import {
   TableColumn,
   Switch,
   Tooltip,
-  Pagination
+  Pagination,
+  Dialog
 
 } from 'element-ui'
 
+Vue.use(Dialog)
 Vue.use(Pagination)
 Vue.use(Tooltip)
 Vue.use(Switch)
