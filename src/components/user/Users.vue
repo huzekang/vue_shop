@@ -25,6 +25,9 @@
       <el-table
         :data="userlist" border stripe>
         <el-table-column
+          type="index">
+        </el-table-column>
+        <el-table-column
           prop="username"
           label="姓名">
         </el-table-column>
@@ -43,6 +46,12 @@
         <el-table-column
           prop="mg_state"
           label="状态">
+          <!--          使用插槽获取当前行数据-->
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.mg_state">
+            </el-switch>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作">
