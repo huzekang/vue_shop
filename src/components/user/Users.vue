@@ -55,17 +55,27 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-<!--            修改按钮-->
+            <!--            修改按钮-->
             <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
-<!--            删除按钮-->
+            <!--            删除按钮-->
             <el-button type="danger" icon="el-icon-edit" size="mini"></el-button>
-<!--            分配角色按钮-->
+            <!--            分配角色按钮-->
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-edit" size="mini"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
+      <!--分页导航-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[1, 2, 5, 10]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totoal">
+      </el-pagination>
     </el-card>
 
   </div>
@@ -78,7 +88,9 @@
         // 获取用户列表的请求参数对象
         queryInfo: {
           query: '',
+          // 当前的页数
           pagenum: 1,
+          // 当前每页显示多少条数据
           pagesize: 2
         },
         userlist: [],
@@ -102,6 +114,23 @@
         this.userlist = res.data.users
         this.totoal = res.data.total
         console.log(res)
+      },
+      /**
+       * 监听 页码值 改变的事件
+       */
+      handleCurrentChange(newPage) {
+        console.log(newPage)
+        this.queryInfo.pagenum = newPage
+        this.getUserList()
+      },
+
+      /**
+       * 监听 pageSize 变化的事件
+       */
+      handleSizeChange(newSize) {
+        console.log(newSize)
+        this.queryInfo.pagesize = newSize
+        this.getUserList()
       }
     }
   }
