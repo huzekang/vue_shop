@@ -48,8 +48,8 @@
           label="状态" width="180px">
           <!--          使用插槽获取当前行数据-->
           <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.mg_state">
+            <el-switch @change="userStateChange(scope.row)"
+                       v-model="scope.row.mg_state">
             </el-switch>
           </template>
         </el-table-column>
@@ -131,6 +131,21 @@
         console.log(newSize)
         this.queryInfo.pagesize = newSize
         this.getUserList()
+      },
+
+      /**
+       * 监听用户状态变化事件
+       */
+      async userStateChange(user) {
+        console.log(user)
+        const { data: res } = await this.$http.put(`users/${user.id}/state/${user.mg_state}`)
+        if (res.meta.status !== 200) {
+          // 请求修改不成功则重置原值
+          user.mg_state = !user.mg_state
+          return this.$message.error('更新用户状态失败')
+        }
+        this.$message.success('更新用户状态成功')
+
       }
     }
   }
