@@ -28,7 +28,21 @@
         width="30%"
       >
         <!--        主体区域-->
-        <span>这是一段信息</span>
+        <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px" class="demo-ruleForm">
+          <!--          el-form-item中的prop是校验规则-->
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="addForm.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password" >
+            <el-input v-model="addForm.password" type="password"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="addForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="手机" prop="phone">
+            <el-input v-model="addForm.phone"></el-input>
+          </el-form-item>
+        </el-form>
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -111,7 +125,36 @@
         userlist: [],
         totoal: 0,
         // 控制添加用户弹窗显示的布尔值
-        dialogVisible: false
+        dialogVisible: false,
+        // 添加用户的表单数据
+        addForm: {
+          username: '',
+          password: '',
+          email: '',
+          phone: ''
+        },
+        // 添加用户的表单验证规则
+        addFormRules: {
+          // 验证用户名是否合法
+          username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+            { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          // 验证密码是否合法
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 6, max: 15, message: '密码长度在 6 到 15 个字符', trigger: 'blur' }
+          ],
+          // 校验邮箱
+          email: [
+            { required: true, message: '请输入邮箱', trigger: 'blur' }
+          ],
+          // 校验手机
+          phone: [
+            { required: true, message: '请输入手机', trigger: 'blur' }
+          ]
+        }
+
       }
     },
     created() {
