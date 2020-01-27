@@ -23,10 +23,12 @@ import {
   Col,
   Table,
   TableColumn,
-  Switch
+  Switch,
+  Tooltip
 
 } from 'element-ui'
 
+Vue.use(Tooltip)
 Vue.use(Switch)
 Vue.use(Table)
 Vue.use(TableColumn)

@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column
           prop="mg_state"
-          label="状态">
+          label="状态" width="180px">
           <!--          使用插槽获取当前行数据-->
           <template slot-scope="scope">
             <el-switch
@@ -53,8 +53,17 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作">
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+<!--            修改按钮-->
+            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+<!--            删除按钮-->
+            <el-button type="danger" icon="el-icon-edit" size="mini"></el-button>
+<!--            分配角色按钮-->
+            <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
+              <el-button type="warning" icon="el-icon-edit" size="mini"></el-button>
+            </el-tooltip>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
