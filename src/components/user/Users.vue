@@ -25,7 +25,7 @@
       <el-dialog
         title="添加用户"
         :visible.sync="dialogVisible"
-        width="30%"
+        width="30%" @close="addDialogClosed"
       >
         <!--        主体区域-->
         <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px" class="demo-ruleForm">
@@ -230,7 +230,13 @@
           return this.$message.error('更新用户状态失败')
         }
         this.$message.success('更新用户状态成功')
-
+      },
+      /**
+       * 监听添加用户对话框关闭事件
+       */
+      addDialogClosed() {
+        // 获取添加用户表单的引用ref,重置表单
+        this.$refs.addFormRef.resetFields()
       }
     }
   }
