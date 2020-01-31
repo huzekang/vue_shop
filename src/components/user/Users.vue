@@ -54,7 +54,7 @@
       <el-dialog
         title="修改用户"
         :visible.sync="editUserDialogVisible"
-        width="35%"
+        width="35%" @close="editDialogClosed"
       >
         <!--        主体区域-->
         <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px" class="demo-ruleForm">
@@ -286,6 +286,11 @@
       addDialogClosed() {
         // 获取添加用户表单的引用ref,重置表单
         this.$refs.addFormRef.resetFields()
+      },
+
+      // 监听修改用户对话框关闭event
+      editDialogClosed() {
+        this.$refs.editFormRef.resetFields()
       },
 
       /**
