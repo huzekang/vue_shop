@@ -9,23 +9,52 @@
 
     <!--    卡片视图-->
     <el-card class="box-card">
-      123
+      <el-row>
+        <el-row>
+          <el-button type="primary">添加角色</el-button>
+        </el-row>
+      </el-row>
+
+      <!--      角色列表区域-->
+      <el-table
+        :data="roleList" border stripe>
+        <!--        展开列-->
+        <el-table-column type="expand"></el-table-column>
+        <!--        索引列-->
+        <el-table-column type="index"></el-table-column>
+        <el-table-column prop="roleName" label="角色名称"></el-table-column>
+        <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
+        <el-table-column width="300px" prop="level" label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+            <el-button size="mini" type="warning" icon="el-icon-setting">分配</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
 <script>
   export default {
     data() {
-      return {}
+      return {
+        roleList: []
+      }
     },
     created() {
-
+      this.getRolesList()
     },
     methods: {
       // 获取权限列表
-      async getRightsList() {
-        const { data: res } = await this.$http.get('rights/list')
-        this.rightsList = res.data
+      async getRolesList() {
+        console.log('xxxxx')
+        const { data: res } = await this.$http.get('roles')
+        if (res.meta.status !== 200) {
+          return this.$message.error('获角色列表失败！')
+        }
+        this.roleList = res.data
+        console.log(this.roleList)
       }
     }
   }
