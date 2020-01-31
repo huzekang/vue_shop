@@ -19,7 +19,35 @@
       <el-table
         :data="roleList" border stripe>
         <!--        展开列-->
-        <el-table-column type="expand"></el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <!--         使用v-for循环一级权限，并为第一行加bdtop样式-->
+            <el-row :class="['bdbottom',index1 ===0 ?'bdtop':'']" v-for="(item1,index1) in scope.row.children"
+                    :key="item1.id">
+              <!--              渲染一级权限-->
+              <el-col :span="5">
+                <el-tag>{{item1.authName}}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <!--              渲染二、三级权限-->
+              <el-col :span="19">
+                <!--                通过v-for循环 嵌套渲染二级权限-->
+                <el-row :class="[index2 ===0 ?'':'bdtop']" v-for="(item2 , index2) in item1.children" :key="item2.id">
+                  <el-col :span="5">
+                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <!--                  通过v-for循环 嵌套渲染三级权限 放在一行中-->
+                  <el-col :span="18">
+                    <el-tag type="warning" v-for="(item3,index3) in item2.children">
+                      {{item3.authName}}
+                    </el-tag>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <!--        索引列-->
         <el-table-column type="index"></el-table-column>
         <el-table-column prop="roleName" label="角色名称"></el-table-column>
@@ -60,4 +88,15 @@
   }
 </script>
 <style lang="less" scoped>
+  .el-tag {
+    margin: 7px;
+  }
+
+  .bdtop {
+    border-top: 1px solid #eeeeee;
+  }
+
+  .bdbottom {
+    border-bottom: 1px solid #eeeeee;
+  }
 </style>
