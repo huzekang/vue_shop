@@ -21,7 +21,7 @@
         :visible.sync="setRightDialogVisible"
         width="50%">
         <!--        主体区域-->
-        <el-tree :data="rightList" :props="treeProps"></el-tree>
+        <el-tree :data="rightList" :props="treeProps" show-checkbox default-expand-all node-key="id"></el-tree>
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
           <el-button @click="setRightDialogVisible = false">取 消</el-button>
