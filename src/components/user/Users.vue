@@ -72,7 +72,7 @@
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
           <el-button @click="editUserDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editUserDialogVisible=false">确 定</el-button>
+          <el-button type="primary" @click="editUserInfo">确 定</el-button>
          </span>
       </el-dialog>
 
@@ -328,6 +328,29 @@
           this.addUserDialogVisible = false
           // 重新获取用户列表
           this.getUserList()
+        })
+      },
+      // 修改用户信息并提交请求
+      editUserInfo() {
+        // 校验表单
+        this.$refs.editFormRef.validate(async valid => {
+          if (!valid) return
+          // 发起修改用户信息请求
+          const { data: res } = await this.$http.put('users/' + this.editForm.id, {
+            email: this.editForm.email,
+            mobile: this.editForm.mobile
+          })
+
+          if (res.meta.status !== 200) {
+            return this.$message.error('更新用户信息失败！')
+          }
+
+          // 关闭对话框
+          this.editUserDialogVisible = false
+          // 刷新用户列表数据
+          this.getUserList()
+          // 提示修改成功
+          this.$message.success('更新用户信息成功！')
         })
       }
     }
