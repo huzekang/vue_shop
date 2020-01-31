@@ -46,7 +46,7 @@
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addUser">确 定</el-button>
          </span>
       </el-dialog>
 
@@ -237,6 +237,17 @@
       addDialogClosed() {
         // 获取添加用户表单的引用ref,重置表单
         this.$refs.addFormRef.resetFields()
+      },
+      /**
+       * 添加用户操作
+       */
+      addUser() {
+        // 获取添加用户表单的引用ref进行表单预校验
+        this.$refs.addFormRef.validate(valid => {
+          console.log(valid)
+          if (!valid) return
+          // 发起网络请求
+        })
       }
     }
   }
