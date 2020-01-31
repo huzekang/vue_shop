@@ -22,7 +22,7 @@
         <el-table-column type="expand">
           <template slot-scope="scope">
             <!--         使用v-for循环一级权限，并为第一行加bdtop样式-->
-            <el-row :class="['bdbottom',index1 ===0 ?'bdtop':'']" v-for="(item1,index1) in scope.row.children"
+            <el-row :class="['bdbottom',index1 ===0 ?'bdtop':'','vcenter']" v-for="(item1,index1) in scope.row.children"
                     :key="item1.id">
               <!--              渲染一级权限-->
               <el-col :span="5">
@@ -32,7 +32,7 @@
               <!--              渲染二、三级权限-->
               <el-col :span="19">
                 <!--                通过v-for循环 嵌套渲染二级权限-->
-                <el-row :class="[index2 ===0 ?'':'bdtop']" v-for="(item2 , index2) in item1.children" :key="item2.id">
+                <el-row :class="[index2 ===0 ?'':'bdtop','vcenter']" v-for="(item2 , index2) in item1.children" :key="item2.id">
                   <el-col :span="5">
                     <el-tag type="success">{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
@@ -98,5 +98,10 @@
 
   .bdbottom {
     border-bottom: 1px solid #eeeeee;
+  }
+
+  .vcenter {
+    display: flex;
+    align-items: center;
   }
 </style>
