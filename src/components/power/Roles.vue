@@ -32,14 +32,17 @@
               <!--              渲染二、三级权限-->
               <el-col :span="19">
                 <!--                通过v-for循环 嵌套渲染二级权限-->
-                <el-row :class="[index2 ===0 ?'':'bdtop','vcenter']" v-for="(item2 , index2) in item1.children" :key="item2.id">
+                <el-row :class="[index2 ===0 ?'':'bdtop','vcenter']" v-for="(item2 , index2) in item1.children"
+                        :key="item2.id">
                   <el-col :span="5">
                     <el-tag type="success">{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <!--                  通过v-for循环 嵌套渲染三级权限 放在一行中-->
                   <el-col :span="18">
-                    <el-tag type="warning" v-for="(item3,index3) in item2.children">
+                    <el-tag type="warning" v-for="(item3,index3) in item2.children"
+                            @close="removeRightById(item3.id)"
+                            :closable=true>
                       {{item3.authName}}
                     </el-tag>
                   </el-col>
@@ -83,6 +86,23 @@
         }
         this.roleList = res.data
         console.log(this.roleList)
+      },
+      // 根据id删除对应的权限
+      async removeRightById(id) {
+        // 弹框询问用户是否删除数据
+        const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).catch(err => err)
+
+        // 如果用户确认删除，则返回字符串confirm
+        // 如果用户取消删除，则返回值为字符串 cancel
+        // console.log(confirmResult)
+        if (confirmResult !== 'confirm') {
+          return this.$message.info('已取消删除！')
+        }
       }
     }
   }
