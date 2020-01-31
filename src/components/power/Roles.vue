@@ -15,6 +15,20 @@
         </el-row>
       </el-row>
 
+      <!--      分配角色权限对话框-->
+      <el-dialog
+        title="分配角色权限"
+        :visible.sync="setRightDialogVisible"
+        width="50%">
+        <!--        主体区域-->
+        <span>这是一段信息</span>
+        <!--        底部操作区域-->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setRightDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="setRightDialogVisible = false">确 定</el-button>
+         </span>
+      </el-dialog>
+
       <!--      角色列表区域-->
       <el-table
         :data="roleList" border stripe>
@@ -27,7 +41,8 @@
               <!--              渲染一级权限-->
               <el-col :span="5">
                 <el-tag @close="removeRightById(scope.row,item1.id)"
-                        :closable=true>{{item1.authName}}</el-tag>
+                        :closable=true>{{item1.authName}}
+                </el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!--              渲染二、三级权限-->
@@ -37,7 +52,8 @@
                         :key="item2.id">
                   <el-col :span="5">
                     <el-tag type="success" @close="removeRightById(scope.row,item2.id)"
-                            :closable=true>{{item2.authName}}</el-tag>
+                            :closable=true>{{item2.authName}}
+                    </el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <!--                  通过v-for循环 嵌套渲染三级权限 放在一行中-->
@@ -61,7 +77,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting">分配</el-button>
+            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog">分配</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,7 +88,12 @@
   export default {
     data() {
       return {
-        roleList: []
+        // 所有角色列表数据
+        roleList: [],
+        // 控制分配权限的对话框展示与隐藏
+        setRightDialogVisible: false,
+        // 权限列表数据
+        rightList: []
       }
     },
     created() {
@@ -115,6 +136,20 @@
 
         // 将删除接口返回的数据重新赋值给权限列表重新渲染
         role.children = res.data
+      },
+      // 展示分配权限的对话框
+      async showSetRightDialog() {
+        // 请求获取权限列表（树形结构）
+        const { data: res } = await this.$http.get('rights/tree')
+        if (res.meta.status !== 200) {
+          return this.$message.error('获权限数据失败！')
+        }
+        // 把获取到的权限数据保存到data中
+        this.rightList = res.data
+        console.log(this.rightList)
+
+        // 展示分配权限对话框
+        this.setRightDialogVisible = true
       }
     }
   }
