@@ -26,7 +26,8 @@ import {
   Switch,
   Tooltip,
   Pagination,
-  Dialog
+  Dialog,
+  MessageBox
 
 } from 'element-ui'
 
@@ -55,3 +56,5 @@ Vue.use(FormItem)
 Vue.use(Input)
 // 挂载element Message组件到Vue中
 Vue.prototype.$message = Message
+// 挂载MessageBox.confirm到Vue原型
+Vue.prototype.$confirm = MessageBox.confirm
