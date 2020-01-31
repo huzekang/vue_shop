@@ -104,7 +104,7 @@
           children: 'children'
         },
         // 树形控件默认选中的节点id值数组
-        defKeys: [105]
+        defKeys: []
       }
     },
     created() {
@@ -152,7 +152,9 @@
 
       // 展示分配权限的对话框
       async showSetRightDialog(role) {
-        console.log(role)
+        // 清空树形控件默认选中的节点id值数组
+        this.defKeys = []
+
         // 请求获取权限列表（树形结构）
         const { data: res } = await this.$http.get('rights/tree')
         if (res.meta.status !== 200) {
