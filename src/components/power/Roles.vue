@@ -26,7 +26,8 @@
                     :key="item1.id">
               <!--              渲染一级权限-->
               <el-col :span="5">
-                <el-tag>{{item1.authName}}</el-tag>
+                <el-tag @close="removeRightById(scope.row,item1.id)"
+                        :closable=true>{{item1.authName}}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!--              渲染二、三级权限-->
@@ -35,13 +36,14 @@
                 <el-row :class="[index2 ===0 ?'':'bdtop','vcenter']" v-for="(item2 , index2) in item1.children"
                         :key="item2.id">
                   <el-col :span="5">
-                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <el-tag type="success" @close="removeRightById(scope.row,item2.id)"
+                            :closable=true>{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <!--                  通过v-for循环 嵌套渲染三级权限 放在一行中-->
                   <el-col :span="18">
                     <el-tag type="warning" v-for="(item3,index3) in item2.children"
-                            @close="removeRightById(item3.id)"
+                            @close="removeRightById(scope.row,item3.id)"
                             :closable=true>
                       {{item3.authName}}
                     </el-tag>
@@ -88,7 +90,7 @@
         console.log(this.roleList)
       },
       // 根据id删除对应的权限
-      async removeRightById(id) {
+      async removeRightById(role, rightId) {
         // 弹框询问用户是否删除数据
         const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
             confirmButtonText: '确定',
@@ -103,6 +105,16 @@
         if (confirmResult !== 'confirm') {
           return this.$message.info('已取消删除！')
         }
+
+        const { data: res } = await this.$http.delete(`roles/${role.id}/rights/${rightId}`)
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除权限失败！')
+        }
+        // 不建议刷新权限列表，会折叠展开的组件
+        // this.getRolesList()
+
+        // 将删除接口返回的数据重新赋值给权限列表重新渲染
+        role.children = res.data
       }
     }
   }
