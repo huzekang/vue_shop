@@ -17,14 +17,14 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="dialogVisible =true">添加用户</el-button>
+          <el-button type="primary" @click="addUserDialogVisible =true">添加用户</el-button>
         </el-col>
       </el-row>
 
       <!--      添加用户弹窗-->
       <el-dialog
         title="添加用户"
-        :visible.sync="dialogVisible"
+        :visible.sync="addUserDialogVisible"
         width="30%" @close="addDialogClosed"
       >
         <!--        主体区域-->
@@ -45,7 +45,7 @@
         </el-form>
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button @click="addUserDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addUser">确 定</el-button>
          </span>
       </el-dialog>
@@ -148,7 +148,7 @@
         userlist: [],
         totoal: 0,
         // 控制添加用户弹窗显示的布尔值
-        dialogVisible: false,
+        addUserDialogVisible: false,
         // 添加用户的表单数据
         addForm: {
           username: '',
@@ -243,10 +243,19 @@
        */
       addUser() {
         // 获取添加用户表单的引用ref进行表单预校验
-        this.$refs.addFormRef.validate(valid => {
+        this.$refs.addFormRef.validate(async valid => {
           console.log(valid)
           if (!valid) return
-          // 发起网络请求
+          // 发起网络请求添加用户到数据库
+          const { data: res } = await this.$http.post('users', this.addForm)
+          if (res.meta.status !== 201) {
+            this.$message.error('添加用户失败')
+          }
+          this.$message.success('添加用户成功')
+          // 隐藏添加用户的对话框
+          this.addUserDialogVisible = false
+          // 重新获取用户列表
+          this.getUserList()
         })
       }
     }
