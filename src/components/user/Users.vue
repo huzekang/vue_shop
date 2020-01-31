@@ -50,6 +50,32 @@
          </span>
       </el-dialog>
 
+      <!--      修改用户信息弹窗-->
+      <el-dialog
+        title="修改用户"
+        :visible.sync="editUserDialogVisible"
+        width="35%"
+      >
+        <!--        主体区域-->
+        <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px" class="demo-ruleForm">
+          <!--          el-form-item中的prop是校验规则-->
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="editForm.username" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="手机" prop="mobile">
+            <el-input v-model="editForm.mobile"></el-input>
+          </el-form-item>
+        </el-form>
+        <!--        底部操作区域-->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editUserDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editUserDialogVisible=false">确 定</el-button>
+         </span>
+      </el-dialog>
+
       <!--      用户列表-->
       <el-table
         :data="userlist" border stripe>
@@ -85,7 +111,8 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <!--            修改按钮-->
-            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini"
+                       @click="showEditUserDialog(scope.row.id)"></el-button>
             <!--            删除按钮-->
             <el-button type="danger" icon="el-icon-edit" size="mini"></el-button>
             <!--            分配角色按钮-->
@@ -149,12 +176,14 @@
         totoal: 0,
         // 控制添加用户弹窗显示的布尔值
         addUserDialogVisible: false,
+        // 控制修改用户信息弹出显示
+        editUserDialogVisible: false,
         // 添加用户的表单数据
         addForm: {
           username: '',
           password: '',
           email: '',
-          phone: ''
+          mobile: ''
         },
         // 添加用户的表单验证规则
         addFormRules: {
@@ -174,7 +203,27 @@
             { validator: checkEmail, trigger: 'blur' }
           ],
           // 校验手机
-          phone: [
+          mobile: [
+            { required: true, message: '请输入手机', trigger: 'blur' },
+            { validator: checkPhone, trigger: 'blur' }
+          ]
+        },
+        // 修改用户的表单数据
+        editForm: {},
+        // 修改用户的表单校验规则
+        editFormRules: {
+          // 验证用户名是否合法
+          username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+            { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          // 校验邮箱
+          email: [
+            { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { validator: checkEmail, trigger: 'blur' }
+          ],
+          // 校验手机
+          mobile: [
             { required: true, message: '请输入手机', trigger: 'blur' },
             { validator: checkPhone, trigger: 'blur' }
           ]
@@ -238,6 +287,24 @@
         // 获取添加用户表单的引用ref,重置表单
         this.$refs.addFormRef.resetFields()
       },
+
+      /**
+       * 显示修改用户弹窗
+       */
+      async showEditUserDialog(id) {
+        console.log('修改用户id：' + id)
+        // 发请求查询该id的用户信息
+        const { data: res } = await this.$http.get('users/' + id)
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('查询用户信息失败')
+        }
+        // 请求查询到的用户信息赋值到editForm
+        this.editForm = res.data
+        // 显示弹窗
+        this.editUserDialogVisible = true
+      },
+
       /**
        * 添加用户操作
        */
