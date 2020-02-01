@@ -56,8 +56,8 @@
     <!--    添加分类的对话框-->
     <el-dialog
       title="添加分类"
-      :visible.sync="setCateDialogVisible"
-      width="50%">
+      :visible.sync="addCateDialogVisible"
+      width="50%" @close="addCateDialogClosed">
       <!--        主体区域-->
       <el-form :model="addCateForm" :rules="addCateFormRules" ref="addCateFormRef" label-width="100px"
                class="demo-ruleForm">
@@ -66,7 +66,7 @@
           <!--          props用来指定配置对象-->
           <!--          v-model用来指定选中选中的父级分类的Id数组-->
           <el-cascader
-            v-model="selectedKey"
+            v-model="selectedKeys"
             :options="parentCateList"
             :props="cascaderProps"
             @change="parentCateChange" clearable change-on-select></el-cascader>
@@ -79,8 +79,8 @@
       </el-form>
       <!--        底部操作区域-->
       <span slot="footer" class="dialog-footer">
-          <el-button @click="setCateDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="setCateDialogVisible = false">确 定</el-button>
+          <el-button @click="addCateDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addCate">确 定</el-button>
          </span>
     </el-dialog>
 
@@ -126,7 +126,7 @@
           }
         ],
         // 控制新增分类对话框显示与隐藏
-        setCateDialogVisible: false,
+        addCateDialogVisible: false,
 
         // 添加分类的表单数据对象
         addCateForm: {
@@ -157,7 +157,7 @@
         },
 
         // 选中的父级分类的Id数组
-        selectedKey: []
+        selectedKeys: []
 
       }
     },
@@ -194,7 +194,7 @@
         // 获取父级分类的数据列表
         this.getParentCateList()
         // 展示对话框
-        this.setCateDialogVisible = true
+        this.addCateDialogVisible = true
       },
 
       // 获取父级分类的数据列表
@@ -209,7 +209,46 @@
 
       // 选择项发生变化触发这个函数
       parentCateChange() {
-        console.log(this.selectedKey)
+        console.log(this.selectedKeys)
+        // 如果selectedKeys数组中长度大于0 ，证明选中父级分类
+        // 反之就说明没有选中
+        if (this.selectedKeys.length > 0) {
+          // 父级分类的id取数组中最后元素
+          this.addCateForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1]
+          // 为当前分类的等级赋值
+          this.addCateForm.cat_level = this.selectedKeys.length
+
+        } else {
+          // 父级分类的id
+          this.addCateForm.cat_pid = 0
+          // 为当前分类的等级赋值
+          this.addCateForm.cat_level = 0
+        }
+      },
+
+      // 点击按钮，添加新的分类
+      async addCate() {
+        // 表单预校验
+        this.$refs.addCateFormRef.validate(valid => {
+          if (!valid) return
+        })
+        const { data: res } = await this.$http.post(`categories`, this.addCateForm)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加商品分类失败！')
+        }
+
+        this.$message.success('添加商品分类成功！')
+        this.getCateList()
+        this.addCateDialogVisible = false
+      },
+
+      // 监听对话框的关闭事件
+      addCateDialogClosed() {
+        // 重置表单和级联选择器数据
+        this.$refs.addCateFormRef.resetFields()
+        this.selectedKeys = []
+        this.addCateForm.cat_level = 0
+        this.addCateForm.cat_pid = 0
       }
 
     }
@@ -219,7 +258,8 @@
   .treeTable {
     margin-top: 15px;
   }
-  .el-cascader{
+
+  .el-cascader {
     width: 100%;
   }
 </style>
