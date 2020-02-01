@@ -21,12 +21,13 @@
         :visible.sync="setRightDialogVisible"
         width="50%">
         <!--        主体区域-->
-        <el-tree :data="rightList" :props="treeProps" :default-checked-keys="defKeys" show-checkbox default-expand-all
+        <el-tree :data="rightList" ref="treeRef" :props="treeProps" :default-checked-keys="defKeys" show-checkbox
+                 default-expand-all
                  node-key="id"></el-tree>
         <!--        底部操作区域-->
         <span slot="footer" class="dialog-footer">
           <el-button @click="setRightDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="setRightDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="assignRights">确 定</el-button>
          </span>
       </el-dialog>
 
@@ -104,7 +105,9 @@
           children: 'children'
         },
         // 树形控件默认选中的节点id值数组
-        defKeys: []
+        defKeys: [],
+        // 要分配权限的角色id
+        roleId: ''
       }
     },
     created() {
@@ -113,7 +116,6 @@
     methods: {
       // 获取权限列表
       async getRolesList() {
-        console.log('xxxxx')
         const { data: res } = await this.$http.get('roles')
         if (res.meta.status !== 200) {
           return this.$message.error('获角色列表失败！')
@@ -152,6 +154,7 @@
 
       // 展示分配权限的对话框
       async showSetRightDialog(role) {
+        this.roleId = role.id
         // 清空树形控件默认选中的节点id值数组
         this.defKeys = []
 
@@ -175,10 +178,35 @@
       getLeafKeys(node, arr) {
         // 如果当前node不包含children属性，则是三级节点
         if (!node.children) {
-           arr.push(node.id)
+          arr.push(node.id)
         } else {
           node.children.forEach(item => this.getLeafKeys(item, arr))
         }
+      },
+
+      // 点击分配权限
+      async assignRights() {
+        // 获取树形控件半选和选中状态的id
+        const checkedRights = [
+          ...this.$refs.treeRef.getCheckedKeys(),
+          ...this.$refs.treeRef.getHalfCheckedKeys()
+        ]
+        // arr合成字符串
+        const ids = checkedRights.join(',')
+
+        // 请求接口
+        const { data: res } = await this.$http.post(`roles/${this.roleId}`, { rids: ids })
+        if (res.meta.status !== 200) {
+          return this.$message.error('角色分配权限失败！')
+        }
+
+        this.$message.success('角色分配权限成功')
+
+        // 刷新角色列表
+        this.getRolesList()
+
+        // 隐藏分配权限树形控件
+        this.setRightDialogVisible = false
       }
     }
   }
