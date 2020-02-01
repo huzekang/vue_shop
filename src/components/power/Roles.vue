@@ -10,9 +10,9 @@
     <!--    卡片视图-->
     <el-card class="box-card">
       <el-row>
-        <el-row>
+        <el-col>
           <el-button type="primary">添加角色</el-button>
-        </el-row>
+        </el-col>
       </el-row>
 
       <!--      分配角色权限对话框-->
