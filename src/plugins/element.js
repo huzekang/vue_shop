@@ -29,7 +29,9 @@ import {
   Dialog,
   MessageBox,
   Tag,
-  Tree
+  Tree,
+  Select,
+  Option
 } from 'element-ui'
 
 Vue.use(Dialog)
@@ -57,6 +59,8 @@ Vue.use(FormItem)
 Vue.use(Input)
 Vue.use(Tag)
 Vue.use(Tree)
+Vue.use(Select)
+Vue.use(Option)
 // 挂载element Message组件到Vue中
 Vue.prototype.$message = Message
 // 挂载MessageBox.confirm到Vue原型
