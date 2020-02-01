@@ -19,7 +19,12 @@
       <tree-table :data="cateList" :columns="columns"
                   :selection-type="false" :expand-type="false" show-index
                   index-text="#" border :show-row-hover="false"
-      ></tree-table>
+      >
+        <template slot="isok" slot-scope="scope">
+          <i class="el-icon-success" style="color: lightgreen" v-if="scope.row.cat_deleted === false"></i>
+          <i class="el-icon-error" style="color: red"  v-else></i>
+        </template>
+      </tree-table>
 
       <!--      分页区域-->
     </el-card>
@@ -44,6 +49,12 @@
           {
             label: '分类名称',
             prop: 'cat_name'
+          },
+          {
+            label: '是否有效',
+            type: 'template',
+            // 表示当前这一列使用模板名称
+            template: 'isok'
           }
         ]
       }
