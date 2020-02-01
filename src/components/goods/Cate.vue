@@ -16,7 +16,7 @@
       </el-row>
 
       <!--      表格-->
-      <tree-table :data="cateList" :columns="columns"
+      <tree-table class="treeTable" :data="cateList" :columns="columns"
                   :selection-type="false" :expand-type="false" show-index
                   index-text="#" border :show-row-hover="false"
       >
@@ -126,4 +126,7 @@
   }
 </script>
 <style lang="less" scoped>
+  .treeTable {
+    margin-top: 15px;
+  }
 </style>
