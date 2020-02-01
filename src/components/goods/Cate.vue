@@ -41,6 +41,16 @@
       </tree-table>
 
       <!--      分页区域-->
+      <!--分页导航-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[1, 2, 5, 10]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -57,7 +67,7 @@
           pagesize: 5
         },
         // 总条数
-        totoal: 0,
+        total: 0,
         // 为tree table指定列的定义
         columns: [
           {
@@ -89,6 +99,7 @@
       this.getCateList()
     },
     methods: {
+      // 获取商品分类列表数据
       async getCateList() {
         const { data: res } = await this.$http.get('categories', { params: this.queryInfo })
         if (res.meta.status !== 200) {
@@ -96,9 +107,20 @@
         }
         // 把数据列表赋值给cateList
         this.cateList = res.data.result
-        console.log(this.cateList)
         // 为总条数赋值
-        this.total = res.data.totoal
+        this.total = res.data.total
+      },
+
+      // 监听 pageNum 改变的事件
+      handleCurrentChange(newPage) {
+        this.queryInfo.pagenum = newPage
+        this.getCateList()
+      },
+
+      // 监听 pageSize 变化的事件
+      handleSizeChange(newSize) {
+        this.queryInfo.pagesize = newSize
+        this.getCateList()
       }
     }
   }
