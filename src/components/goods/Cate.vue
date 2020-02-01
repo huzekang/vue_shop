@@ -62,7 +62,14 @@
       <el-form :model="addCateForm" :rules="addCateFormRules" ref="addCateFormRef" label-width="100px"
                class="demo-ruleForm">
         <el-form-item label="父级分类">
-          <el-input v-model="addCateForm.cat_name"></el-input>
+          <!--          option用来指定数据源-->
+          <!--          props用来指定配置对象-->
+          <!--          v-model用来指定选中选中的父级分类的Id数组-->
+          <el-cascader
+            v-model="selectedKey"
+            :options="parentCateList"
+            :props="cascaderProps"
+            @change="parentCateChange" clearable change-on-select></el-cascader>
         </el-form-item>
         <!--          el-form-item中的prop是校验规则-->
         <el-form-item label="分类名称" prop="cat_name">
@@ -120,6 +127,7 @@
         ],
         // 控制新增分类对话框显示与隐藏
         setCateDialogVisible: false,
+
         // 添加分类的表单数据对象
         addCateForm: {
           // 要添加的分类名称
@@ -129,12 +137,28 @@
           // 分类的等级，默认要添加的是1级分类
           cat_level: 0
         },
+
+        // 添加分类的表单校验规则
         addCateFormRules: {
           // 验证用户名是否合法
           cat_name: [
             { required: true, message: '请输入分类名称', trigger: 'blur' }
           ]
-        }
+        },
+
+        // 父级分类数据列表
+        parentCateList: [],
+
+        // 指定级联选择器的配置对象
+        cascaderProps: {
+          value: 'cat_id',
+          label: 'cat_name',
+          children: 'children'
+        },
+
+        // 选中的父级分类的Id数组
+        selectedKey: []
+
       }
     },
     created() {
@@ -167,13 +191,35 @@
 
       // 点击添加分类，弹出对话框
       showAddCateDialog() {
+        // 获取父级分类的数据列表
+        this.getParentCateList()
+        // 展示对话框
         this.setCateDialogVisible = true
+      },
+
+      // 获取父级分类的数据列表
+      async getParentCateList() {
+        const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取父级分类数据失败！')
+        }
+
+        this.parentCateList = res.data
+      },
+
+      // 选择项发生变化触发这个函数
+      parentCateChange() {
+        console.log(this.selectedKey)
       }
+
     }
   }
 </script>
 <style lang="less" scoped>
   .treeTable {
     margin-top: 15px;
+  }
+  .el-cascader{
+    width: 100%;
   }
 </style>
