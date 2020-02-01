@@ -32,13 +32,15 @@ import {
   Tree,
   Select,
   Option,
-  Cascader
+  Cascader,
+  Alert
 } from 'element-ui'
 
 // 引入外部js使用elementUi的时间线组件
 import TimeLine from './timeline/index'
 import TimeLineItem from './timeline-item/index'
 
+Vue.use(Alert)
 Vue.use(Dialog)
 Vue.use(Pagination)
 Vue.use(Tooltip)
