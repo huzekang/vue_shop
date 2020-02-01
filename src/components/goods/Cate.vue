@@ -16,6 +16,10 @@
       </el-row>
 
       <!--      表格-->
+      <tree-table :data="cateList" :columns="columns"
+                  :selection-type="false" :expand-type="false" show-index
+                  index-text="#" border :show-row-hover="false"
+      ></tree-table>
 
       <!--      分页区域-->
     </el-card>
@@ -34,7 +38,14 @@
           pagesize: 5
         },
         // 总条数
-        totoal: 0
+        totoal: 0,
+        // 为tree table指定列的定义
+        columns: [
+          {
+            label: '分类名称',
+            prop: 'cat_name'
+          }
+        ]
       }
     },
     created() {
@@ -47,7 +58,8 @@
           return this.$message.error('获取商品列表失败！')
         }
         // 把数据列表赋值给cateList
-        this.cateList = res.data
+        this.cateList = res.data.result
+        console.log(this.cateList)
         // 为总条数赋值
         this.total = res.data.totoal
       }
