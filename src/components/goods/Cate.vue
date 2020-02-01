@@ -11,7 +11,7 @@
     <el-card class="box-card">
       <el-row>
         <el-col>
-          <el-button type="primary">添加分类</el-button>
+          <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
         </el-col>
       </el-row>
 
@@ -52,6 +52,31 @@
         :total="total">
       </el-pagination>
     </el-card>
+
+    <!--    添加分类的对话框-->
+    <el-dialog
+      title="添加分类"
+      :visible.sync="setCateDialogVisible"
+      width="50%">
+      <!--        主体区域-->
+      <el-form :model="addCateForm" :rules="addCateFormRules" ref="addCateFormRef" label-width="100px"
+               class="demo-ruleForm">
+        <el-form-item label="父级分类">
+          <el-input v-model="addCateForm.cat_name"></el-input>
+        </el-form-item>
+        <!--          el-form-item中的prop是校验规则-->
+        <el-form-item label="分类名称" prop="cat_name">
+          <el-input v-model="addCateForm.cat_name"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <!--        底部操作区域-->
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="setCateDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="setCateDialogVisible = false">确 定</el-button>
+         </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -92,7 +117,24 @@
             // 表示当前这一列使用模板名称
             template: 'opt'
           }
-        ]
+        ],
+        // 控制新增分类对话框显示与隐藏
+        setCateDialogVisible: false,
+        // 添加分类的表单数据对象
+        addCateForm: {
+          // 要添加的分类名称
+          cate_name: '',
+          // 父级分类的id
+          cat_pid: 0,
+          // 分类的等级，默认要添加的是1级分类
+          cat_level: 0
+        },
+        addCateFormRules: {
+          // 验证用户名是否合法
+          cat_name: [
+            { required: true, message: '请输入分类名称', trigger: 'blur' }
+          ]
+        }
       }
     },
     created() {
@@ -121,6 +163,11 @@
       handleSizeChange(newSize) {
         this.queryInfo.pagesize = newSize
         this.getCateList()
+      },
+
+      // 点击添加分类，弹出对话框
+      showAddCateDialog() {
+        this.setCateDialogVisible = true
       }
     }
   }
