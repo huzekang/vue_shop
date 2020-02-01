@@ -195,7 +195,7 @@
         const ids = checkedRights.join(',')
 
         // 请求接口
-        const { data: res } = await this.$http.post(`roles/${this.roleId}`, { rids: ids })
+        const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, { rids: ids })
         if (res.meta.status !== 200) {
           return this.$message.error('角色分配权限失败！')
         }
