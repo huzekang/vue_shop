@@ -98,7 +98,7 @@
         if (res.meta.status !== 200) {
           return this.$message.error(res.meta.msg)
         } else {
-          this.$message.success(res.meta.msg)
+          // this.$message.success(res.meta.msg)
           this.menulist = res.data
         }
       },
