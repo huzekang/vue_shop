@@ -32,11 +32,11 @@
       <!--      tab页签区域-->
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
         <!--        动态参数的面板-->
-        <el-tab-pane label="动态参数" name="first">
+        <el-tab-pane label="动态参数" name="many">
           <el-button type="primary" size="mini" :disabled="isBtnDisabled">添加参数</el-button>
         </el-tab-pane>
         <!--        静态属性的面板-->
-        <el-tab-pane label="静态属性" name="second">
+        <el-tab-pane label="静态属性" name="only">
           <el-button type="primary" size="mini" :disabled="isBtnDisabled">添加属性</el-button>
         </el-tab-pane>
       </el-tabs>
@@ -59,7 +59,7 @@
         // 级联选择框选中的key数组
         selectedKeys: [],
         // tab页签激活的数据
-        activeName: ''
+        activeName: 'many'
       }
     },
     created() {
@@ -77,14 +77,19 @@
       },
 
       // 级联选择框选中项变化，会触发
-      handleChange() {
+      async handleChange() {
         // 证明不是选中三级分类
         if (this.selectedKeys.length !== 3) {
           this.selectedKeys = []
           return
         }
         // 证明是选中三级分类
-        console.log(this.selectedKeys)
+        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, { params: { sel: this.activeName } })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获商品参数列表失败！')
+        }
+
+        console.log(res.data)
       },
 
       // tab页签点击变化监听事件
@@ -99,6 +104,13 @@
           return true
         }
         return false
+      },
+      // 计算选择的分类id
+      cateId() {
+        if (this.selectedKeys.length === 3) {
+          return this.selectedKeys[2]
+        }
+        return null
       }
     }
   }
