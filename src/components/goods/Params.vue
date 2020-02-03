@@ -28,6 +28,18 @@
         </el-col>
         <el-col></el-col>
       </el-row>
+
+      <!--      tab页签区域-->
+      <el-tabs v-model="activeName" @tab-click="handleTabClick">
+        <!--        动态参数的面板-->
+        <el-tab-pane label="动态参数" name="first">
+          <el-button type="primary" size="mini" :disabled="isBtnDisabled">添加参数</el-button>
+        </el-tab-pane>
+        <!--        静态属性的面板-->
+        <el-tab-pane label="静态属性" name="second">
+          <el-button type="primary" size="mini" :disabled="isBtnDisabled">添加属性</el-button>
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
 
   </div>
@@ -45,15 +57,17 @@
           children: 'children'
         },
         // 级联选择框选中的key数组
-        selectedKeys: []
+        selectedKeys: [],
+        // tab页签激活的数据
+        activeName: ''
       }
     },
     created() {
-      this._getCateList()
+      this.getCateList()
     },
     methods: {
       // 获取商品分类列表
-      async _getCateList() {
+      async getCateList() {
         const { data: res } = await this.$http.get('categories')
         if (res.meta.status !== 200) {
           return this.$message.error('获取商品分类列表失败！')
@@ -64,7 +78,27 @@
 
       // 级联选择框选中项变化，会触发
       handleChange() {
+        // 证明不是选中三级分类
+        if (this.selectedKeys.length !== 3) {
+          this.selectedKeys = []
+          return
+        }
+        // 证明是选中三级分类
         console.log(this.selectedKeys)
+      },
+
+      // tab页签点击变化监听事件
+      handleTabClick() {
+        console.log(this.activeName)
+      }
+    },
+    computed: {
+      // 如果按你需要被禁用，则返回true
+      isBtnDisabled() {
+        if (this.selectedKeys.length !== 3) {
+          return true
+        }
+        return false
       }
     }
   }

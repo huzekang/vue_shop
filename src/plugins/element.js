@@ -33,7 +33,9 @@ import {
   Select,
   Option,
   Cascader,
-  Alert
+  Alert,
+  TabPane,
+  Tabs
 } from 'element-ui'
 
 // 引入外部js使用elementUi的时间线组件
@@ -71,6 +73,8 @@ Vue.use(Option)
 Vue.use(Cascader)
 Vue.use(TimeLine)
 Vue.use(TimeLineItem)
+Vue.use(TabPane)
+Vue.use(Tabs)
 // 挂载element Message组件到Vue中
 Vue.prototype.$message = Message
 // 挂载MessageBox.confirm到Vue原型
