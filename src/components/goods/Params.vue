@@ -16,6 +16,15 @@
       <el-row>
         <el-col class="cat_opt">
           <span>选择商品分类</span>
+          <!--          选择商品分类的级联选择框-->
+          <!--          option用来指定数据源-->
+          <!--          props用来指定配置对象-->
+          <!--          v-model用来指定选中选中的父级分类的Id数组-->
+          <el-cascader
+            v-model="selectedKeys"
+            :options="cateList"
+            :props="cateProps"
+            @change="handleChange" clearable change-on-select></el-cascader>
         </el-col>
         <el-col></el-col>
       </el-row>
@@ -27,13 +36,23 @@
   export default {
     data() {
       return {
-        cateList: []
+        // 商品分类列表
+        cateList: [],
+        // 级联选择框的配置对象
+        cateProps: {
+          value: 'cat_id',
+          label: 'cat_name',
+          children: 'children'
+        },
+        // 级联选择框选中的key数组
+        selectedKeys: []
       }
     },
     created() {
       this._getCateList()
     },
     methods: {
+      // 获取商品分类列表
       async _getCateList() {
         const { data: res } = await this.$http.get('categories')
         if (res.meta.status !== 200) {
@@ -41,6 +60,11 @@
         }
         this.cateList = res.data
         console.log(this.cateList)
+      },
+
+      // 级联选择框选中项变化，会触发
+      handleChange() {
+        console.log(this.selectedKeys)
       }
     }
   }
