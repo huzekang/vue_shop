@@ -26,11 +26,23 @@
 <script>
   export default {
     data() {
-      return {}
+      return {
+        cateList: []
+      }
     },
     created() {
+      this._getCateList()
     },
-    methods: {}
+    methods: {
+      async _getCateList() {
+        const { data: res } = await this.$http.get('categories')
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取商品分类列表失败！')
+        }
+        this.cateList = res.data
+        console.log(this.cateList)
+      }
+    }
   }
 </script>
 <style lang="less" scoped>
