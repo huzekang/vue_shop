@@ -42,10 +42,21 @@
       </el-tabs>
     </el-card>
 
+    <!--      json编辑器-->
+    <my-json-editor></my-json-editor>
+
   </div>
 </template>
 <script>
+  // 引入自定义组件
+  import MyJsonEditor from '../editor/MyJsonEditor'
+
   export default {
+    // 绑定标签名和组件
+    components: {
+      'my-json-editor': MyJsonEditor
+    },
+
     data() {
       return {
         // 商品分类列表
