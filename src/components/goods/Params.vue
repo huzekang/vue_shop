@@ -226,6 +226,8 @@
         // 证明不是选中三级分类
         if (this.selectedKeys.length !== 3) {
           this.selectedKeys = []
+          this.manyTableData = []
+          this.onlyTableData = []
           return
         }
         // 证明是选中三级分类
