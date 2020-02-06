@@ -53,8 +53,8 @@
                           v-model="scope.row.inputValue"
                           ref="saveTagInput"
                           size="small"
-                          @keyup.enter.native="handleInputConfirm"
-                          @blur="handleInputConfirm"
+                          @keyup.enter.native="handleInputConfirm(scope.row)"
+                          @blur="handleInputConfirm(scope.row)"
                 >
                 </el-input>
                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
@@ -346,8 +346,28 @@
       },
 
       // 文本框失去焦点或摁下enter都会触发
-      handleInputConfirm() {
-        this.inputVisible = false
+      async handleInputConfirm(row) {
+        if (row.inputValue.trim().length === 0) {
+          row.inputVisible = false
+          row.inputValue = ''
+        } else {
+          // 证明输入了内容，需要做后续处理
+          row.attr_vals.push(row.inputValue)
+          row.inputVisible = false
+          row.inputValue = ''
+
+          // 持久化请求
+          const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,
+            {
+              attr_name: row.attr_name,
+              attr_sel: row.attr_sel,
+              attr_vals: row.attr_vals.join(' ')
+            })
+          if (res.meta.status !== 200) {
+            return this.$message.error('修改参数项失败！')
+          }
+          this.$message.success('修改参数项成功！')
+        }
       },
 
       // 点击按钮，展示文本输入框
