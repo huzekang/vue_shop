@@ -52,7 +52,7 @@
                   编辑
                 </el-button>
                 <!--            删除按钮-->
-                <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -75,7 +75,7 @@
                   编辑
                 </el-button>
                 <!--            删除按钮-->
-                <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -286,6 +286,33 @@
         // 重置修改的表单，进行赋值
         this.editForm = res.data
         this.editDialogVisible = true
+      },
+
+      // 根据id删除对应的参数项目
+      async removeParams(attrId) {
+        // 弹框询问用户是否删除数据
+        const confirmResult = await this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).catch(err => err)
+
+        // 如果用户确认删除，则返回字符串confirm
+        // 如果用户取消删除，则返回值为字符串 cancel
+        // console.log(confirmResult)
+        if (confirmResult !== 'confirm') {
+          return this.$message.info('已取消删除！')
+        }
+
+        // 删除的业务逻辑
+        const { data: res } = await this.$http.delete(`categories/${this.cateId}/attributes/${attrId}`)
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除参数失败！')
+        }
+
+        this.$message.success('删除参数成功！')
+        this.getParamsData()
       }
     },
     computed: {
