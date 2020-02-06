@@ -70,7 +70,11 @@
         // 级联选择框选中的key数组
         selectedKeys: [],
         // tab页签激活的数据
-        activeName: 'many'
+        activeName: 'many',
+        // 动态参数列表
+        manyTableData: [],
+        // 静态参数列表
+        onlyTableData: []
       }
     },
     created() {
@@ -89,6 +93,10 @@
 
       // 级联选择框选中项变化，会触发
       async handleChange() {
+        this.getParamsData()
+      },
+
+      async getParamsData() {
         // 证明不是选中三级分类
         if (this.selectedKeys.length !== 3) {
           this.selectedKeys = []
@@ -101,10 +109,18 @@
         }
 
         console.log(res.data)
+        if (this.activeName === 'many') {
+          // 如果获取的数据是动态参数列表
+          this.manyTableData = res.data
+        } else {
+          // 如果获取的数据是静态参数列表
+          this.onlyTableData = res.data
+        }
       },
 
       // tab页签点击变化监听事件
       handleTabClick() {
+        this.getParamsData()
         console.log(this.activeName)
       }
     },
