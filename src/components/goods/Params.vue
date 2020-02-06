@@ -48,7 +48,9 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <!--            修改按钮-->
-                <el-button type="primary" icon="el-icon-edit" @click="showEditDialog" size="mini">编辑</el-button>
+                <el-button type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row.attr_id)" size="mini">
+                  编辑
+                </el-button>
                 <!--            删除按钮-->
                 <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
               </template>
@@ -69,7 +71,9 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <!--            修改按钮-->
-                <el-button type="primary" icon="el-icon-edit" @click="showEditDialog" size="mini">编辑</el-button>
+                <el-button type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row.attr_id)" size="mini">
+                  编辑
+                </el-button>
                 <!--            删除按钮-->
                 <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
               </template>
@@ -167,7 +171,8 @@
         editDialogVisible: false,
         // 编辑参数的表单数据对象
         editForm: {
-          attr_name: ''
+          attr_name: '',
+          attr_id: null
         },
         // 编辑表单的验证规则对象
         editFormRules: {
@@ -249,7 +254,20 @@
 
       // 点击按钮，确认修改参数信息
       editParams() {
+        this.$refs.editFormRef.validate(async valid => {
+          if (!valid) return
+          const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${this.editForm.attr_id}`, {
+            attr_name: this.editForm.attr_name,
+            attr_sel: this.activeName
+          })
+          if (res.meta.status !== 200) {
+            return this.$message.error('修改参数失败！')
+          }
 
+          this.$message.success('修改参数成功！')
+          this.getParamsData()
+          this.editDialogVisible = false
+        })
       },
 
       // 重置编辑的表单
@@ -258,7 +276,15 @@
       },
 
       // 点击按钮，展示修改的对话框
-      showEditDialog() {
+      async showEditDialog(attrId) {
+        this.editDialogVisible = true
+        // 查询当前参数的信息
+        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes/${attrId}`, { params: { attr_sel: this.activeName } })
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取参数信息失败！')
+        }
+        // 重置修改的表单，进行赋值
+        this.editForm = res.data
         this.editDialogVisible = true
       }
     },
