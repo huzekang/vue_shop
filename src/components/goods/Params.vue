@@ -44,7 +44,7 @@
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <!--                循环渲染tag便签-->
-                <el-tag closable v-for="(item,i) in scope.row.attr_vals" :key="i">
+                <el-tag closable @close="handleClose(i,scope.row)" v-for="(item,i) in scope.row.attr_vals" :key="i">
                   {{item}}
                 </el-tag>
                 <!--                输入的文本框-->
@@ -356,18 +356,33 @@
           row.inputVisible = false
           row.inputValue = ''
 
-          // 持久化请求
-          const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,
-            {
-              attr_name: row.attr_name,
-              attr_sel: row.attr_sel,
-              attr_vals: row.attr_vals.join(' ')
-            })
-          if (res.meta.status !== 200) {
-            return this.$message.error('修改参数项失败！')
-          }
-          this.$message.success('修改参数项成功！')
+          // 发请求保存可选项
+          this.saveAttrVals(row)
         }
+      },
+      // 监听可选项关闭事件
+      handleClose(i, row) {
+        // 可选项数组移除i索引的值
+        console.log(row.attr_vals)
+        row.attr_vals.splice(i, 1)
+        console.log(row.attr_vals)
+        // 持久化
+        this.saveAttrVals(row)
+      },
+
+      // 将attr_vals的数据保存数据库
+      async saveAttrVals(row) {
+        // 持久化请求
+        const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,
+          {
+            attr_name: row.attr_name,
+            attr_sel: row.attr_sel,
+            attr_vals: row.attr_vals.join(' ')
+          })
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改参数项失败！')
+        }
+        this.$message.success('修改参数项成功！')
       },
 
       // 点击按钮，展示文本输入框
