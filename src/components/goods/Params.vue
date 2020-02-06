@@ -48,17 +48,16 @@
                   {{item}}
                 </el-tag>
                 <!--                输入的文本框-->
-                <el-input
+                <el-input v-if="scope.row.inputVisible"
                   class="input-new-tag"
-                  v-if="inputVisible"
-                  v-model="inputValue"
+                  v-model="scope.row.inputValue"
                   ref="saveTagInput"
                   size="small"
                   @keyup.enter.native="handleInputConfirm"
                   @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
               </template>
             </el-table-column>
             <!--        索引列-->
@@ -200,11 +199,7 @@
           attr_name: [
             { required: true, message: '请输入参数名称', trigger: 'blur' }
           ]
-        },
-        // 控制按钮与文本框的切换显示
-        inputVisible: false,
-        // 文本框中的输入内容
-        inputValue: ''
+        }
       }
     },
     created() {
@@ -241,6 +236,10 @@
         // 分割可选项字符串，变成数组
         res.data.forEach(item => {
           item.attr_vals = item.attr_vals ? (item.attr_vals || '').split(' ') : []
+          // 控制文本框的显示与隐藏
+          item.inputVisible = false
+          // 文本框中输入的值
+          item.inputValue = ''
         })
         console.log(res.data)
 
@@ -351,8 +350,8 @@
       },
 
       // 点击按钮，展示文本输入框
-      showInput() {
-        this.inputVisible = true
+      showInput(row) {
+        row.inputVisible = true
       }
     },
     computed: {
@@ -389,7 +388,8 @@
   .el-tag {
     margin: 10px;
   }
-  .input-new-tag{
+
+  .input-new-tag {
     width: 100px;
   }
 </style>
