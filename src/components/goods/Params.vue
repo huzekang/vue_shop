@@ -41,7 +41,13 @@
           <el-table
             :data="manyTableData" border stripe>
             <!--            展开列-->
-            <el-table-column type="expand"></el-table-column>
+            <el-table-column type="expand">
+              <template slot-scope="scope">
+                <el-tag closable v-for="(item,i) in scope.row.attr_vals" :key="i">
+                  {{item}}
+                </el-tag>
+              </template>
+            </el-table-column>
             <!--        索引列-->
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="attr_name" label="参数名称"></el-table-column>
@@ -52,7 +58,8 @@
                   编辑
                 </el-button>
                 <!--            删除按钮-->
-                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除</el-button>
+                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -75,7 +82,8 @@
                   编辑
                 </el-button>
                 <!--            删除按钮-->
-                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除</el-button>
+                <el-button type="danger" icon="el-icon-delete" @click="removeParams(scope.row.attr_id)" size="mini">删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -213,7 +221,11 @@
           return this.$message.error('获商品参数列表失败！')
         }
 
+        res.data.forEach(item => {
+          item.attr_vals = (item.attr_vals || '').split(' ')
+        })
         console.log(res.data)
+
         if (this.activeName === 'many') {
           // 如果获取的数据是动态参数列表
           this.manyTableData = res.data
@@ -344,5 +356,8 @@
 <style lang="less" scoped>
   .cat_opt {
     margin: 15px;
+  }
+  .el-tag{
+    margin: 10px;
   }
 </style>
