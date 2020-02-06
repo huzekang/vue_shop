@@ -49,15 +49,16 @@
                 </el-tag>
                 <!--                输入的文本框-->
                 <el-input v-if="scope.row.inputVisible"
-                  class="input-new-tag"
-                  v-model="scope.row.inputValue"
-                  ref="saveTagInput"
-                  size="small"
-                  @keyup.enter.native="handleInputConfirm"
-                  @blur="handleInputConfirm"
+                          class="input-new-tag"
+                          v-model="scope.row.inputValue"
+                          ref="saveTagInput"
+                          size="small"
+                          @keyup.enter.native="handleInputConfirm"
+                          @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
+                </el-button>
               </template>
             </el-table-column>
             <!--        索引列-->
@@ -352,6 +353,10 @@
       // 点击按钮，展示文本输入框
       showInput(row) {
         row.inputVisible = true
+        // 为文本框自动获取焦点
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus()
+        })
       }
     },
     computed: {
