@@ -85,6 +85,27 @@
           <!--          静态参数表格-->
           <el-table
             :data="onlyTableData" border stripe>
+            <!--            展开列-->
+            <el-table-column type="expand">
+              <template slot-scope="scope">
+                <!--                循环渲染tag便签-->
+                <el-tag closable @close="handleClose(i,scope.row)" v-for="(item,i) in scope.row.attr_vals" :key="i">
+                  {{item}}
+                </el-tag>
+                <!--                输入的文本框-->
+                <el-input v-if="scope.row.inputVisible"
+                          class="input-new-tag"
+                          v-model="scope.row.inputValue"
+                          ref="saveTagInput"
+                          size="small"
+                          @keyup.enter.native="handleInputConfirm(scope.row)"
+                          @blur="handleInputConfirm(scope.row)"
+                >
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
+                </el-button>
+              </template>
+            </el-table-column>
             <!--        索引列-->
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="attr_name" label="属性名称"></el-table-column>
