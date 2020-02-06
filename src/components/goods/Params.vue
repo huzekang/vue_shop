@@ -43,9 +43,22 @@
             <!--            展开列-->
             <el-table-column type="expand">
               <template slot-scope="scope">
+                <!--                循环渲染tag便签-->
                 <el-tag closable v-for="(item,i) in scope.row.attr_vals" :key="i">
                   {{item}}
                 </el-tag>
+                <!--                输入的文本框-->
+                <el-input
+                  class="input-new-tag"
+                  v-if="inputVisible"
+                  v-model="inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                >
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
               </template>
             </el-table-column>
             <!--        索引列-->
@@ -187,7 +200,11 @@
           attr_name: [
             { required: true, message: '请输入参数名称', trigger: 'blur' }
           ]
-        }
+        },
+        // 控制按钮与文本框的切换显示
+        inputVisible: false,
+        // 文本框中的输入内容
+        inputValue: ''
       }
     },
     created() {
@@ -221,8 +238,9 @@
           return this.$message.error('获商品参数列表失败！')
         }
 
+        // 分割可选项字符串，变成数组
         res.data.forEach(item => {
-          item.attr_vals = (item.attr_vals || '').split(' ')
+          item.attr_vals = item.attr_vals ? (item.attr_vals || '').split(' ') : []
         })
         console.log(res.data)
 
@@ -325,6 +343,16 @@
 
         this.$message.success('删除参数成功！')
         this.getParamsData()
+      },
+
+      // 文本框失去焦点或摁下enter都会触发
+      handleInputConfirm() {
+        this.inputVisible = false
+      },
+
+      // 点击按钮，展示文本输入框
+      showInput() {
+        this.inputVisible = true
       }
     },
     computed: {
@@ -357,7 +385,11 @@
   .cat_opt {
     margin: 15px;
   }
-  .el-tag{
+
+  .el-tag {
     margin: 10px;
+  }
+  .input-new-tag{
+    width: 100px;
   }
 </style>
