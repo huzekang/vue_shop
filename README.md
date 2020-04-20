@@ -1,6 +1,4 @@
 # vue_shop
 
-启动vue cli 网页版
-```shell script
-vue ui
-```
+启动：1. 先npm install 安装依赖
+     2. 使用命令`npm run serve`启动
